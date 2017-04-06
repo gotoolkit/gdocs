@@ -9,3 +9,7 @@ import:
 - package: google.golang.org/api
   subpackages:
   - sheets/v4
+- package: github.com/spf13/cobra
+  subpackages:
+  - cobra
+- package: github.com/spf13/viper
