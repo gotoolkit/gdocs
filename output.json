@@ -1,0 +1,91 @@
+{
+  "Special": {
+    "message": ""
+  },
+  "about": {
+    "contact": "",
+    "info": "",
+    "note": ""
+  },
+  "activity": {
+    "entertainment": "",
+    "scenic": ""
+  },
+  "alert": {
+    "message": "",
+    "ok": "",
+    "title": "",
+    "update": ""
+  },
+  "club": {
+    "description": "",
+    "items": "",
+    "title": ""
+  },
+  "common": {
+    "loading": ""
+  },
+  "cover": {
+    "about": "",
+    "hotel": "",
+    "saipan": ""
+  },
+  "header": {
+    "title": ""
+  },
+  "hotel": {
+    "contact": "",
+    "menu": "",
+    "notice": "",
+    "reserve": ""
+  },
+  "reserve": {
+    "adult_count": "",
+    "child_count": "",
+    "count": "",
+    "date": "",
+    "email": "",
+    "end_date": "",
+    "form": "",
+    "name": "",
+    "options": "",
+    "phone": "",
+    "start_date": ""
+  },
+  "resort": {
+    "address": "",
+    "description": "",
+    "email": "",
+    "location": "",
+    "phone": "",
+    "sub_title": "",
+    "title": ""
+  },
+  "restaurant": {
+    "menu": "",
+    "reserve": "",
+    "room": ""
+  },
+  "saipan": {
+    "about": "",
+    "collection": "",
+    "custom": "",
+    "flight": "",
+    "form": "",
+    "islands": "",
+    "menu": "",
+    "transport": ""
+  },
+  "settings": {
+    "feed": "",
+    "language": "",
+    "term": "",
+    "version": ""
+  },
+  "swiper": {
+    "title_0": "",
+    "title_1": "",
+    "title_2": "",
+    "title_3": ""
+  }
+}

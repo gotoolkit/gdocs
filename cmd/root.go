@@ -51,6 +51,7 @@ func Execute() {
 var sheetId = ""
 var jsonFile = ""
 var readRange = ""
+var readRanges []string
 
 func init() {
 	cobra.OnInitialize(initConfig)
@@ -64,7 +65,7 @@ func init() {
 	RootCmd.PersistentFlags().StringVarP(&sheetId, "id", "i", "", "ID of Google Excel Docs")
 	RootCmd.PersistentFlags().StringVarP(&jsonFile, "json", "j", "", "json file to import to Excel")
 	RootCmd.PersistentFlags().StringVarP(&readRange, "range", "r", "", "Excel read range ")
-
+	RootCmd.PersistentFlags().StringArrayVarP(&readRanges, "ranges", "s", []string{}, "Excel read Ranges")
 	// Cobra also supports local flags, which will only run
 	// when this action is called directly.
 	RootCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")

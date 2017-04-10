@@ -17,9 +17,13 @@ package cmd
 import (
 	"fmt"
 
+	"encoding/json"
 	"github.com/spf13/cobra"
 	"google.golang.org/api/sheets/v4"
+	"io/ioutil"
 	"log"
+	"strings"
+	"strconv"
 )
 
 // excelToJsonCmd represents the excelToJson command
@@ -43,31 +47,71 @@ to quickly create a Cobra application.`,
 			log.Fatalf("Need set sheet id use -i")
 		}
 
-		if readRange == "" {
-			log.Fatalf("Need set read range use -r")
-		}
-
 		if jsonFile == "" {
 			log.Fatalf("Need set json file use -j")
 		}
 
-		ranges := []string{"A1:A300", "C1:C300"} // TODO: Update placeholder value.
+		if len(readRanges) == 0 {
+			log.Fatalf("Need set read ranges -s")
+		}
 
-		resp, err := service.Spreadsheets.Values.BatchGet(sheetId).Ranges(ranges...).Do()
+		resp, err := service.Spreadsheets.Values.BatchGet(sheetId).Ranges(readRanges...).Do()
 		if err != nil {
 			log.Fatalf("Unable to retrieve data from sheet. %v", err)
 		}
 
 		if len(resp.ValueRanges) > 0 {
-			fmt.Println("Name, Major:")
+			rFace := make(map[string]interface{})
+
 			for column, row := range resp.ValueRanges {
-				// Print columns A and E, which correspond to indices 0 and 4.
-				fmt.Println(column , row)
+				if column == 0 {
+					previousKey := ""
+					//previous2Key := ""
+					var r2Face map[string]interface{}
+					//var r3Face map[string]interface{}
+					for _, v := range row.Values {
+
+						keys := strings.Split(v[0].(string), ".")
+
+						converKeysToMap(previousKey, keys)
+
+					}
+				}
+				//fmt.Println(rFace)
 			}
+			jData, _ := json.Marshal(rFace)
+			err = ioutil.WriteFile("output.json", jData, 0644)
 		} else {
 			fmt.Print("No data found.")
 		}
 	},
+}
+
+func converKeysToMap(previousKey string, keys []string, in map[string]interface{}, out map[string]interface{}) {
+	if len(keys) > 1 {
+		if previousKey != keys[0] {
+			out = make(map[string]interface{})
+			previousKey = keys[0]
+			in[keys[0]] = out
+		}
+
+		out[keys[1]] = ""
+	}
+
+	index, err := strconv.Atoi(keys[0])
+	if err != nil {
+		out["index"] = index
+	}
+
+	//if previous2Key != keys[1] {
+	//	r3Face = make(map[string]interface{})
+	//	previousKey = keys[1]
+	//	r2Face[keys[1]] = r3Face
+	//}
+
+	//keys = append(keys[:0], keys[:1]...)
+
+	fmt.Println(keys)
 }
 
 func init() {
