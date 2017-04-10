@@ -73,7 +73,7 @@ to quickly create a Cobra application.`,
 
 						keys := strings.Split(v[0].(string), ".")
 
-						converKeysToMap(previousKey, keys)
+						converKeysToMap(previousKey, keys, rFace, r2Face)
 
 					}
 				}
