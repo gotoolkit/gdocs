@@ -23,7 +23,6 @@ import (
 	"io/ioutil"
 	"log"
 	"strings"
-	"strconv"
 )
 
 // excelToJsonCmd represents the excelToJson command
@@ -63,22 +62,14 @@ to quickly create a Cobra application.`,
 		if len(resp.ValueRanges) > 0 {
 			rFace := make(map[string]interface{})
 
-			for column, row := range resp.ValueRanges {
-				if column == 0 {
-					previousKey := ""
-					//previous2Key := ""
-					var r2Face map[string]interface{}
-					//var r3Face map[string]interface{}
-					for _, v := range row.Values {
-
-						keys := strings.Split(v[0].(string), ".")
-
-						converKeysToMap(previousKey, keys, rFace, r2Face)
-
-					}
-				}
-				//fmt.Println(rFace)
+			jKeys := resp.ValueRanges[0].Values
+			//jValues := resp.ValueRanges[1].Values
+			for i := 0; i < len(jKeys); i++ {
+				index = 0
+				keys := strings.Split(jKeys[i][0].(string), ".")
+				converKeysToMap(keys, rFace, map[string]interface{}{})
 			}
+
 			jData, _ := json.Marshal(rFace)
 			err = ioutil.WriteFile("output.json", jData, 0644)
 		} else {
@@ -87,22 +78,28 @@ to quickly create a Cobra application.`,
 	},
 }
 
-func converKeysToMap(previousKey string, keys []string, in map[string]interface{}, out map[string]interface{}) {
-	if len(keys) > 1 {
-		if previousKey != keys[0] {
-			out = make(map[string]interface{})
-			previousKey = keys[0]
-			in[keys[0]] = out
-		}
+var preKeys [20]string
+var index = 0
 
-		out[keys[1]] = ""
+func converKeysToMap(keys []string, in map[string]interface{}, out map[string]interface{}) {
+	if len(keys) < 1{
+		return
 	}
-
-	index, err := strconv.Atoi(keys[0])
-	if err != nil {
-		out["index"] = index
+	if preKeys[index] != keys[0] {
+		out = make(map[string]interface{})
+		preKeys[index] = keys[0]
+		in[keys[0]] = out
 	}
-
+	tmpMap := in[preKeys[index]]
+	tmpKeys := append(keys[:0], keys[1:]...)
+	index++
+	converKeysToMap(tmpKeys, tmpMap.(map[string]interface{}), map[string]interface{}{})
+	//
+	//index, err := strconv.Atoi(keys[0])
+	//if err != nil {
+	//	out[keys[0]] = index
+	//}
+	//out["array"] = []string{}
 	//if previous2Key != keys[1] {
 	//	r3Face = make(map[string]interface{})
 	//	previousKey = keys[1]
@@ -111,7 +108,7 @@ func converKeysToMap(previousKey string, keys []string, in map[string]interface{
 
 	//keys = append(keys[:0], keys[:1]...)
 
-	fmt.Println(keys)
+	//fmt.Println(keys)
 }
 
 func init() {

@@ -20,9 +20,9 @@ import (
 	"io/ioutil"
 	"log"
 
-	"sort"
 	"github.com/spf13/cobra"
 	"google.golang.org/api/sheets/v4"
+	"sort"
 )
 
 // jsonToExcelCmd represents the jsonToExcel command
@@ -78,12 +78,13 @@ to quickly create a Cobra application.`,
 		}
 		sort.Strings(keys)
 
-		for k, v := range keys {
+		for _, v := range keys {
 			cells := make([]interface{}, 2)
 			cells[0] = v
-			cells[1] = values[k]
+			cells[1] = rFace[v]
 			values = append(values, cells)
 		}
+
 		valueRange := &sheets.ValueRange{
 			Values:         values,
 			MajorDimension: "ROWS",
