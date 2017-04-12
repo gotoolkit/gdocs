@@ -46,10 +46,6 @@ to quickly create a Cobra application.`,
 			log.Fatalf("Need set sheet id use -i")
 		}
 
-		if jsonFile == "" {
-			log.Fatalf("Need set json file use -j")
-		}
-
 		if len(readRanges) == 0 {
 			log.Fatalf("Need set read ranges -s")
 		}
@@ -60,14 +56,17 @@ to quickly create a Cobra application.`,
 		}
 
 		if len(resp.ValueRanges) > 0 {
-			rFace := make(map[string]interface{})
 
 			jKeys := resp.ValueRanges[0].Values
-			//jValues := resp.ValueRanges[1].Values
+			jValues := resp.ValueRanges[1].Values
+			jsonMap := make(map[string]string, len(jKeys))
 			for i := 0; i < len(jKeys); i++ {
-				index = 0
-				keys := strings.Split(jKeys[i][0].(string), ".")
-				converKeysToMap(keys, rFace, map[string]interface{}{})
+				jsonMap[jKeys[i][0].(string)] = jValues[i][0].(string)
+			}
+			rFace := make(map[string]interface{})
+			for key, value := range jsonMap {
+				keys := strings.Split(key, ".")
+				convertToMap(rFace, keys, value)
 			}
 
 			jData, _ := json.Marshal(rFace)
@@ -78,37 +77,20 @@ to quickly create a Cobra application.`,
 	},
 }
 
-var preKeys [20]string
-var index = 0
-
-func converKeysToMap(keys []string, in map[string]interface{}, out map[string]interface{}) {
-	if len(keys) < 1{
+func convertToMap(in interface{}, keys []string, value string) {
+	if len(keys) == 1 {
+		in.(map[string]interface{})[keys[0]] = value
 		return
 	}
-	if preKeys[index] != keys[0] {
-		out = make(map[string]interface{})
-		preKeys[index] = keys[0]
-		in[keys[0]] = out
+
+	val, ok := in.(map[string]interface{})[keys[0]]
+	if !ok {
+		val = make(map[string]interface{})
+		in.(map[string]interface{})[keys[0]] = val
 	}
-	tmpMap := in[preKeys[index]]
-	tmpKeys := append(keys[:0], keys[1:]...)
-	index++
-	converKeysToMap(tmpKeys, tmpMap.(map[string]interface{}), map[string]interface{}{})
-	//
-	//index, err := strconv.Atoi(keys[0])
-	//if err != nil {
-	//	out[keys[0]] = index
-	//}
-	//out["array"] = []string{}
-	//if previous2Key != keys[1] {
-	//	r3Face = make(map[string]interface{})
-	//	previousKey = keys[1]
-	//	r2Face[keys[1]] = r3Face
-	//}
 
-	//keys = append(keys[:0], keys[:1]...)
-
-	//fmt.Println(keys)
+	keys = append(keys[:0], keys[1:]...)
+	convertToMap(val, keys, value)
 }
 
 func init() {
