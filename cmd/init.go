@@ -66,7 +66,10 @@ func init() {
 
 func initClient() *http.Client {
 	ctx := context.Background()
-	sBytes, err := ioutil.ReadFile("client_secret.json")
+	if initFile == "" {
+		log.Fatalln("Need set client_secret.json file use -f")
+	}
+	sBytes, err := ioutil.ReadFile(initFile)
 	if err != nil {
 		log.Fatalf("Unable to read client secret file: %v", err)
 	}

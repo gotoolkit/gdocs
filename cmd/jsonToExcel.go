@@ -123,6 +123,9 @@ func jsonToKeyValue(pref string, in map[string]interface{}, out map[string]inter
 	}
 }
 
+var readRange = ""
+var jsonFile = ""
+
 func init() {
 	RootCmd.AddCommand(jsonToExcelCmd)
 
@@ -135,5 +138,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// jsonToExcelCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
-
+	jsonToExcelCmd.Flags().StringVarP(&readRange, "range", "r", "", "Excel read range ")
+	jsonToExcelCmd.Flags().StringVarP(&jsonFile, "json", "j", "", "json file to import to Excel")
 }

@@ -39,15 +39,19 @@ to quickly create a Cobra application.`,
 		client = initClient()
 		service, err := sheets.New(client)
 		if err != nil {
-			log.Fatalf("Unable to retrieve Sheets Client %v", err)
+			log.Fatalln("Unable to retrieve Sheets Client %v", err)
 		}
 
 		if sheetId == "" {
-			log.Fatalf("Need set sheet id use -i")
+			log.Fatalln("Need set sheet id use -i")
 		}
 
-		if len(readRanges) == 0 {
-			log.Fatalf("Need set read ranges -s")
+		if jsonOutputFile == "" {
+			log.Fatalln("Need set output json file use -o")
+		}
+
+		if len(readRanges) < 2 {
+			log.Fatalln("Need set read ranges -s (twice)")
 		}
 
 		resp, err := service.Spreadsheets.Values.BatchGet(sheetId).Ranges(readRanges...).Do()
@@ -70,7 +74,7 @@ to quickly create a Cobra application.`,
 			}
 
 			jData, _ := json.Marshal(rFace)
-			err = ioutil.WriteFile("output.json", jData, 0644)
+			err = ioutil.WriteFile(jsonOutputFile, jData, 0644)
 		} else {
 			fmt.Print("No data found.")
 		}
@@ -93,6 +97,9 @@ func convertToMap(in interface{}, keys []string, value string) {
 	convertToMap(val, keys, value)
 }
 
+var readRanges []string
+var jsonOutputFile = ""
+
 func init() {
 	RootCmd.AddCommand(excelToJsonCmd)
 
@@ -105,4 +112,6 @@ func init() {
 	// Cobra supports local flags which will only run when this command
 	// is called directly, e.g.:
 	// excelToJsonCmd.Flags().BoolP("toggle", "t", false, "Help message for toggle")
+	excelToJsonCmd.Flags().StringArrayVarP(&readRanges, "ranges", "s", []string{}, "Excel read Ranges")
+	excelToJsonCmd.Flags().StringVarP(&jsonOutputFile, "output", "o", "", "json file to output Excel data")
 }
