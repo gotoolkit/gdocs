@@ -37,13 +37,15 @@ var client *http.Client
 // initCmd represents the init command
 var initCmd = &cobra.Command{
 	Use:   "init",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
+	Short: "initial cli with google_api_client_secret.json file ",
+	Long: ` Following the instruction:
+	https://console.developers.google.com/flows/enableapi?apiid=sheets.googleapis.com&pli=1
 
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Get google_api_client_secret.json and using -f to load secret.json file
+
+Example:
+	gdocs init -f /Path/to/your/google_api_client_secret.json
+`,
 	Run: func(cmd *cobra.Command, args []string) {
 		client = initClient()
 	},
@@ -104,6 +106,8 @@ func getTokenFromWeb(config *oauth2.Config) *oauth2.Token {
 	authURL := config.AuthCodeURL("state-token", oauth2.AccessTypeOffline)
 	fmt.Printf("Go to the following link in your browser then type the "+
 		"authorization code: \n%v\n", authURL)
+
+	fmt.Println("Copy and paste the authorization code then hit Enter!")
 
 	var code string
 	if _, err := fmt.Scan(&code); err != nil {

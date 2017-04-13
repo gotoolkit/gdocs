@@ -28,13 +28,13 @@ import (
 // jsonToExcelCmd represents the jsonToExcel command
 var jsonToExcelCmd = &cobra.Command{
 	Use:   "jsonToExcel",
-	Short: "A brief description of your command",
-	Long: `A longer description that spans multiple lines and likely contains examples
-and usage of using your command. For example:
-
-Cobra is a CLI library for Go that empowers applications.
-This application is a tool to generate the needed files
-to quickly create a Cobra application.`,
+	Short: "Convert JSON to Google Sheets",
+	Long: `Convert JSON to Google Sheets
+Need Three flags:
+    -i ID of output Google Sheets
+    -r Range of output Google Sheets data store (e.g.: A1 or A1:B100)
+    -j JSON input file
+	`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		client = initClient()
