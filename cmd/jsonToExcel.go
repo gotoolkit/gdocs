@@ -34,7 +34,7 @@ Need Three flags:
     -i ID of output Google Sheets
     -r Range of output Google Sheets data store (e.g.: A1 or A1:B100)
     -j JSON input file
-	`,
+    -f google_api_client_secret.json file`,
 	Run: func(cmd *cobra.Command, args []string) {
 
 		client = initClient()
